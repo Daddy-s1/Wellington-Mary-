@@ -3,312 +3,547 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Wellington Mary Hotel | Direct Booking Sample</title>
+  <title>Wellington Mary Hotel &amp; Suites | Book Direct</title>
+  <meta name="description" content="Wellington Mary Hotel & Suites — refined rooms and suites with 24-hour power, high-speed Wi-Fi, round-the-clock security and in-room dining. Reserve directly with the hotel." />
+  <meta name="theme-color" content="#2A060B" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='32' fill='%232A060B'/%3E%3Ctext x='50%25' y='56%25' text-anchor='middle' dominant-baseline='middle' font-family='Georgia,serif' font-size='26' fill='%23D4B475'%3EWM%3C/text%3E%3C/svg%3E" />
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script>
     tailwind.config = {
       theme: {
         extend: {
           colors: {
-            burgundy: {
-              950: '#2A060B',
-              900: '#4A0E17',
-              800: '#631521',
-              700: '#7D1D2C',
-            },
-            gold: {
-              400: '#D4B475',
-              500: '#C5A059',
-              600: '#A8843E',
-            }
+            burgundy: { 950: '#2A060B', 900: '#4A0E17', 800: '#631521', 700: '#7D1D2C' },
+            gold: { 300: '#E3CC9C', 400: '#D4B475', 500: '#C5A059', 600: '#A8843E' },
+            ivory: { 50: '#FBF8F3', 100: '#F5EFE5', 200: '#EAE1D2' },
+            ink: '#1E1A18'
           },
           fontFamily: {
-            serif: ['"Cormorant Garamond"', 'serif'],
-            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            serif: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+            sans: ['"Hanken Grotesk"', 'system-ui', 'sans-serif'],
           }
         }
       }
     }
   </script>
-</head>
-<body class="bg-stone-50 text-stone-900 font-sans antialiased">
+  <style>
+    :root { --gold: #C5A059; --burgundy: #2A060B; }
+    .grain::after {
+      content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .08; mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+    .arch { border-radius: 999px 999px 0 0; }
+    .eyebrow { letter-spacing: .28em; }
+    .rule { display: inline-block; width: 2.5rem; height: 1px; background: currentColor; vertical-align: middle; }
 
-  <!-- Top Navigation -->
-  <header class="fixed top-0 inset-x-0 z-40 bg-burgundy-950/95 backdrop-blur-md border-b border-white/10">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-      <a href="#" class="flex items-center gap-2.5">
-        <div class="w-9 h-9 rounded-full bg-burgundy-800 border border-gold-500/60 flex items-center justify-center text-gold-400 font-serif font-bold text-lg">
-          WM
-        </div>
-        <div>
-          <span class="font-serif text-xl font-bold tracking-wide text-white block leading-none">Wellington Mary</span>
-          <span class="text-[10px] uppercase tracking-[0.25em] text-gold-400 block mt-0.5">Hotel & Suites</span>
-        </div>
+    .reveal { opacity: 0; transform: translateY(18px); transition: opacity .9s cubic-bezier(.2,.7,.2,1), transform .9s cubic-bezier(.2,.7,.2,1); }
+    .reveal.is-visible { opacity: 1; transform: none; }
+    .fade-up { opacity: 0; transform: translateY(16px); animation: fadeUp 1s cubic-bezier(.2,.7,.2,1) forwards; }
+    @keyframes fadeUp { to { opacity: 1; transform: none; } }
+
+    #siteHeader.scrolled { background: rgba(42, 6, 11, .96); box-shadow: 0 10px 30px -18px rgba(0,0,0,.6); }
+    #siteHeader.scrolled .header-inner { height: 4.25rem; }
+
+    .field { width: 100%; background: transparent; border: 0; border-bottom: 1px solid #D9CEBC; padding: .55rem 0; font-size: .95rem; color: #1E1A18; border-radius: 0; transition: border-color .2s; }
+    .field:focus { outline: none; border-color: #631521; }
+    .field.invalid { border-color: #B42318; }
+    select.field { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23631521' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 2px center; padding-right: 1.25rem; }
+
+    .btn-gold { background: #C5A059; color: #2A060B; }
+    .btn-gold:hover { background: #D4B475; }
+    .link-underline { background-image: linear-gradient(currentColor, currentColor); background-size: 0 1px; background-repeat: no-repeat; background-position: 0 100%; transition: background-size .35s ease; }
+    .link-underline:hover { background-size: 100% 1px; }
+
+    #bookingModal.open { display: flex; }
+    #bookingModal.open .modal-panel { animation: panelIn .45s cubic-bezier(.2,.7,.2,1); }
+    @keyframes panelIn { from { opacity: 0; transform: translateY(24px) scale(.98); } to { opacity: 1; transform: none; } }
+
+    @media (prefers-reduced-motion: reduce) {
+      .reveal, .fade-up { opacity: 1 !important; transform: none !important; animation: none !important; transition: none !important; }
+    }
+  </style>
+</head>
+<body class="bg-ivory-50 text-ink font-sans antialiased selection:bg-gold-300 selection:text-burgundy-950">
+
+  <!-- Header -->
+  <header id="siteHeader" class="fixed top-0 inset-x-0 z-40 transition-all duration-300 backdrop-blur-md bg-burgundy-950/40">
+    <div class="header-inner max-w-7xl mx-auto px-5 sm:px-8 h-20 flex items-center justify-between transition-all duration-300">
+      <a href="#top" class="flex items-center gap-3" aria-label="Wellington Mary Hotel & Suites — home">
+        <span class="w-10 h-10 rounded-full border border-gold-500/70 flex items-center justify-center text-gold-400 font-serif font-semibold text-[15px] tracking-wide">WM</span>
+        <span class="leading-none">
+          <span class="font-serif text-[22px] font-semibold tracking-wide text-white block">Wellington Mary</span>
+          <span class="text-[10px] uppercase eyebrow text-gold-400 block mt-1">Hotel &amp; Suites</span>
+        </span>
       </a>
 
-      <nav class="hidden md:flex items-center gap-8 text-sm text-stone-300">
-        <a href="#rooms" class="hover:text-gold-400 transition">Suites & Rates</a>
-        <a href="#amenities" class="hover:text-gold-400 transition">Amenities</a>
-        <a href="#location" class="hover:text-gold-400 transition">Location</a>
+      <nav class="hidden md:flex items-center gap-10 text-[13px] uppercase tracking-[0.18em] text-ivory-200/90" aria-label="Primary">
+        <a href="#rooms" class="link-underline hover:text-gold-300 transition">Rooms &amp; Suites</a>
+        <a href="#amenities" class="link-underline hover:text-gold-300 transition">Amenities</a>
+        <a href="#contact" class="link-underline hover:text-gold-300 transition">Contact</a>
       </nav>
 
-      <button onclick="openBookingModal('Executive Suite')" class="bg-gold-500 hover:bg-gold-400 text-burgundy-950 font-semibold text-xs sm:text-sm px-4 py-2.5 rounded-lg transition shadow-lg">
-        Book Direct
-      </button>
+      <div class="flex items-center gap-3">
+        <button onclick="openBookingModal()" class="btn-gold font-semibold text-[12px] sm:text-[13px] uppercase tracking-[0.16em] px-5 py-3 transition">
+          Book Direct
+        </button>
+        <button id="menuToggle" class="md:hidden w-10 h-10 flex items-center justify-center text-white" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </button>
+      </div>
+    </div>
+    <div id="mobileMenu" class="md:hidden hidden border-t border-white/10 bg-burgundy-950">
+      <nav class="px-5 py-4 flex flex-col text-sm uppercase tracking-[0.18em] text-ivory-200" aria-label="Mobile">
+        <a href="#rooms" class="py-3 border-b border-white/5">Rooms &amp; Suites</a>
+        <a href="#amenities" class="py-3 border-b border-white/5">Amenities</a>
+        <a href="#contact" class="py-3">Contact</a>
+      </nav>
     </div>
   </header>
 
-  <!-- Hero Section (Styled Empty Image Placeholder) -->
-  <section class="relative min-h-[85vh] flex items-center pt-16 bg-burgundy-950 overflow-hidden">
-    <!-- Subtle architectural grid & gradient placeholder where hero photo will sit -->
-    <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,#631521_0%,#2A060B_65%)]"></div>
-    <div class="absolute right-6 top-24 hidden lg:flex flex-col items-center justify-center w-[420px] h-[340px] rounded-2xl border border-dashed border-gold-500/35 bg-white/[0.03] text-center p-6">
-      <div class="w-12 h-12 rounded-full bg-gold-500/10 border border-gold-500/30 flex items-center justify-center text-gold-400 mb-3">
-        🖼️
-      </div>
-      <p class="text-xs uppercase tracking-[0.2em] text-gold-400 font-semibold">Hero Showcase Photo</p>
-      <p class="text-xs text-stone-400 mt-1.5 max-w-[240px]">Your exterior or signature suite photo goes here</p>
-    </div>
+  <main id="top">
+    <!-- Hero -->
+    <section class="relative bg-burgundy-950 text-white overflow-hidden grain">
+      <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_80%_20%,#631521_0%,transparent_55%),radial-gradient(ellipse_at_10%_100%,#4A0E17_0%,transparent_50%)]"></div>
 
-    <div class="relative max-w-6xl mx-auto px-4 sm:px-6 py-16 w-full">
-      <div class="max-w-2xl">
-        <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-gold-500/30 text-gold-400 text-xs font-medium mb-6">
-          <span class="w-1.5 h-1.5 rounded-full bg-gold-400 animate-pulse"></span>
-          Website Concept Preview
-        </span>
-        <h1 class="font-serif text-4xl sm:text-6xl font-bold text-white leading-[1.1] mb-5">
-          Refined Comfort & Modern Luxury at <span class="text-gold-400">Wellington Mary</span>
-        </h1>
-        <p class="text-stone-300 text-base sm:text-lg leading-relaxed mb-8 max-w-xl">
-          Experience thoughtfully designed suites, 24/7 uninterrupted power, and seamless hospitality. Check room availability and reserve your stay directly in seconds.
+      <div class="relative max-w-7xl mx-auto px-5 sm:px-8 pt-36 pb-40 lg:pt-44 lg:pb-48 grid lg:grid-cols-12 gap-14 items-center">
+        <div class="lg:col-span-7">
+          <p class="fade-up text-gold-400 text-[11px] uppercase eyebrow font-semibold mb-7"><span class="rule mr-4"></span>Hotel &amp; Suites</p>
+          <h1 class="fade-up font-serif font-medium text-[44px] leading-[1.02] sm:text-7xl lg:text-[84px] tracking-[-0.01em]" style="animation-delay:.1s">
+            Quiet luxury,<br /><em class="text-gold-400 font-medium">always on.</em>
+          </h1>
+          <p class="fade-up mt-8 text-ivory-200/80 text-lg leading-relaxed max-w-lg" style="animation-delay:.2s">
+            Considered rooms and suites with uninterrupted power, fast fibre Wi-Fi and attentive service around the clock. Reserve directly with our front desk for a personal confirmation.
+          </p>
+          <div class="fade-up mt-10 flex flex-col sm:flex-row gap-4" style="animation-delay:.3s">
+            <a href="#rooms" class="btn-gold text-center font-semibold text-[13px] uppercase tracking-[0.16em] px-8 py-4 transition">View Rooms &amp; Suites</a>
+            <button onclick="openBookingModal()" class="group inline-flex items-center justify-center gap-3 border border-white/25 hover:border-gold-400 text-white text-[13px] uppercase tracking-[0.16em] px-8 py-4 transition">
+              Check Availability
+              <svg class="transition group-hover:translate-x-1" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Arched feature panel (replace the SVG with a hero photo when available) -->
+        <div class="hidden lg:block lg:col-span-5 fade-up" style="animation-delay:.35s">
+          <div class="relative mx-auto w-[360px]">
+            <div class="absolute -inset-4 arch border border-gold-500/30"></div>
+            <div class="arch overflow-hidden h-[480px] bg-gradient-to-b from-burgundy-800 via-burgundy-900 to-burgundy-950 relative">
+              <svg class="absolute inset-0 w-full h-full" viewBox="0 0 360 480" fill="none" aria-hidden="true">
+                <defs>
+                  <linearGradient id="glow" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#D4B475" stop-opacity=".35"/><stop offset="1" stop-color="#D4B475" stop-opacity="0"/></linearGradient>
+                </defs>
+                <circle cx="250" cy="120" r="46" fill="url(#glow)"/>
+                <g stroke="#D4B475" stroke-opacity=".55" stroke-width="1">
+                  <path d="M60 480V250h240v230"/>
+                  <path d="M40 250h280M80 250V200h200v50"/>
+                  <path d="M120 200v-40h120v40"/>
+                  <path d="M155 480v-90a25 25 0 0 1 50 0v90"/>
+                  <g>
+                    <rect x="85" y="275" width="34" height="46"/><rect x="163" y="275" width="34" height="46"/><rect x="241" y="275" width="34" height="46"/>
+                    <rect x="85" y="345" width="34" height="46"/><rect x="241" y="345" width="34" height="46"/>
+                    <rect x="85" y="415" width="34" height="46"/><rect x="241" y="415" width="34" height="46"/>
+                  </g>
+                </g>
+                <g fill="#D4B475" fill-opacity=".18">
+                  <rect x="163" y="275" width="34" height="46"/><rect x="85" y="345" width="34" height="46"/><rect x="241" y="415" width="34" height="46"/>
+                </g>
+              </svg>
+              <div class="absolute bottom-0 inset-x-0 p-8 bg-gradient-to-t from-burgundy-950 to-transparent">
+                <p class="font-serif italic text-2xl text-gold-300">Wellington Mary</p>
+                <p class="text-[10px] uppercase eyebrow text-ivory-200/70 mt-1">Est. for the discerning guest</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Availability bar -->
+    <section class="relative z-10 -mt-24 px-5 sm:px-8" aria-label="Check availability">
+      <form onsubmit="handleQuickSearch(event)" class="max-w-6xl mx-auto bg-white shadow-[0_30px_60px_-30px_rgba(42,6,11,.45)] grid grid-cols-1 md:grid-cols-[1fr_1fr_1fr_auto] divide-y md:divide-y-0 md:divide-x divide-ivory-200">
+        <label class="block px-7 py-5">
+          <span class="block text-[10px] uppercase eyebrow font-semibold text-burgundy-800 mb-1">Arrival</span>
+          <input type="date" id="quickCheckIn" required class="field !border-0 !p-0 !text-base" />
+        </label>
+        <label class="block px-7 py-5">
+          <span class="block text-[10px] uppercase eyebrow font-semibold text-burgundy-800 mb-1">Departure</span>
+          <input type="date" id="quickCheckOut" required class="field !border-0 !p-0 !text-base" />
+        </label>
+        <label class="block px-7 py-5">
+          <span class="block text-[10px] uppercase eyebrow font-semibold text-burgundy-800 mb-1">Guests</span>
+          <select id="quickGuests" class="field !border-0 !p-0 !pr-5 !text-base">
+            <option>1 Adult</option>
+            <option selected>2 Adults</option>
+            <option>2 Adults, 1 Child</option>
+            <option>2 Adults, 2 Children</option>
+          </select>
+        </label>
+        <button type="submit" class="bg-burgundy-900 hover:bg-burgundy-800 text-white font-semibold text-[13px] uppercase tracking-[0.16em] px-10 py-6 transition">
+          Check Availability
+        </button>
+      </form>
+      <p id="quickError" class="max-w-6xl mx-auto mt-3 text-sm text-red-700 hidden" role="alert"></p>
+    </section>
+
+    <!-- Introduction -->
+    <section class="max-w-7xl mx-auto px-5 sm:px-8 py-24 lg:py-32 grid lg:grid-cols-12 gap-10">
+      <div class="lg:col-span-4 reveal">
+        <p class="text-burgundy-800 text-[11px] uppercase eyebrow font-semibold"><span class="rule mr-4"></span>Welcome</p>
+      </div>
+      <div class="lg:col-span-8 reveal">
+        <p class="font-serif text-3xl sm:text-[40px] leading-[1.2] text-ink">
+          A calm, well-run house where the lights stay on, the Wi-Fi keeps up, and every request is met by someone who <em class="text-burgundy-800">knows your name.</em>
         </p>
-
-        <div class="flex flex-col sm:flex-row gap-3.5">
-          <a href="#rooms" class="bg-gold-500 hover:bg-gold-400 text-burgundy-950 font-bold px-7 py-3.5 rounded-xl text-center transition shadow-xl">
-            Explore Suites & Rates
-          </a>
-          <button onclick="openBookingModal('General Availability Check')" class="bg-white/10 hover:bg-white/15 text-white border border-white/20 font-medium px-7 py-3.5 rounded-xl text-center transition backdrop-blur-sm">
-            Check Availability
-          </button>
+        <div class="mt-10 grid sm:grid-cols-3 gap-8 text-sm text-stone-600 border-t border-ivory-200 pt-8">
+          <div><p class="font-semibold text-ink mb-1">Book direct</p>Speak to our front desk personally and receive confirmation on WhatsApp.</div>
+          <div><p class="font-semibold text-ink mb-1">Always powered</p>Full backup supply keeps air conditioning and Wi-Fi running day and night.</div>
+          <div><p class="font-semibold text-ink mb-1">Secure stay</p>Gated grounds, CCTV and on-site parking for complete peace of mind.</div>
         </div>
       </div>
+    </section>
 
-      <!-- Quick Availability Bar -->
-      <div class="mt-12 bg-white/95 backdrop-blur-md rounded-2xl p-4 sm:p-5 shadow-2xl max-w-4xl border border-stone-200">
-        <form onsubmit="handleQuickSearch(event)" class="grid grid-cols-1 sm:grid-cols-4 gap-4 items-end">
+    <!-- Rooms -->
+    <section id="rooms" class="bg-ivory-100 py-24 lg:py-32 scroll-mt-16">
+      <div class="max-w-7xl mx-auto px-5 sm:px-8">
+        <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-16 lg:mb-24 reveal">
           <div>
-            <label class="block text-xs font-semibold text-stone-500 uppercase tracking-wider mb-1.5">Check-In</label>
-            <input type="date" id="quickCheckIn" required class="w-full rounded-lg border border-stone-300 px-3 py-2.5 text-sm text-stone-800 focus:outline-none focus:border-burgundy-800" />
+            <p class="text-burgundy-800 text-[11px] uppercase eyebrow font-semibold mb-4"><span class="rule mr-4"></span>Accommodation</p>
+            <h2 class="font-serif text-5xl sm:text-6xl font-medium leading-none">Rooms &amp; Suites</h2>
           </div>
-          <div>
-            <label class="block text-xs font-semibold text-stone-500 uppercase tracking-wider mb-1.5">Check-Out</label>
-            <input type="date" id="quickCheckOut" required class="w-full rounded-lg border border-stone-300 px-3 py-2.5 text-sm text-stone-800 focus:outline-none focus:border-burgundy-800" />
+          <p class="text-stone-600 max-w-md leading-relaxed">
+            Every stay includes complimentary high-speed Wi-Fi, 24-hour power and secure on-site parking. Rates are confirmed personally by our reservations team.
+          </p>
+        </div>
+
+        <div id="roomsList" class="space-y-24 lg:space-y-32"></div>
+      </div>
+    </section>
+
+    <!-- Amenities -->
+    <section id="amenities" class="relative bg-burgundy-950 text-white py-24 lg:py-32 overflow-hidden grain scroll-mt-16">
+      <div class="relative max-w-7xl mx-auto px-5 sm:px-8 grid lg:grid-cols-12 gap-14">
+        <div class="lg:col-span-4 reveal">
+          <p class="text-gold-400 text-[11px] uppercase eyebrow font-semibold mb-4"><span class="rule mr-4"></span>Amenities</p>
+          <h2 class="font-serif text-5xl font-medium leading-[1.05]">Everything handled, <em class="text-gold-400">quietly.</em></h2>
+          <p class="mt-6 text-ivory-200/70 leading-relaxed">The essentials of a good stay, taken care of so you can rest, work or celebrate without interruption.</p>
+        </div>
+
+        <div class="lg:col-span-8 grid sm:grid-cols-2 border-t border-l border-white/10">
+          <div class="reveal p-8 lg:p-10 border-r border-b border-white/10 hover:bg-white/[0.03] transition">
+            <svg class="text-gold-400 mb-6" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z"/></svg>
+            <h3 class="font-serif text-2xl mb-2">24/7 Power &amp; Cooling</h3>
+            <p class="text-sm text-ivory-200/65 leading-relaxed">Uninterrupted backup power and whisper-quiet split air conditioning in every room.</p>
           </div>
-          <div>
-            <label class="block text-xs font-semibold text-stone-500 uppercase tracking-wider mb-1.5">Guests</label>
-            <select id="quickGuests" class="w-full rounded-lg border border-stone-300 px-3 py-2.5 text-sm text-stone-800 focus:outline-none focus:border-burgundy-800">
-              <option>1 Adult</option>
-              <option selected>2 Adults</option>
-              <option>2 Adults, 1 Child</option>
-            </select>
+          <div class="reveal p-8 lg:p-10 border-r border-b border-white/10 hover:bg-white/[0.03] transition">
+            <svg class="text-gold-400 mb-6" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M2 9a15 15 0 0 1 20 0M5 12.5a10 10 0 0 1 14 0M8.5 16a5 5 0 0 1 7 0"/><circle cx="12" cy="19.5" r="1"/></svg>
+            <h3 class="font-serif text-2xl mb-2">Fibre Wi-Fi</h3>
+            <p class="text-sm text-ivory-200/65 leading-relaxed">Dedicated high-speed internet ready for remote work, streaming and video calls.</p>
           </div>
-          <button type="submit" class="w-full bg-burgundy-900 hover:bg-burgundy-800 text-white font-semibold py-2.5 px-4 rounded-lg transition text-sm h-[42px]">
-            Find Available Rooms
-          </button>
-        </form>
-      </div>
-    </div>
-  </section>
-
-  <!-- Suites & Rates Section -->
-  <section id="rooms" class="py-20 max-w-6xl mx-auto px-4 sm:px-6">
-    <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-4">
-      <div>
-        <span class="text-xs font-bold uppercase tracking-[0.2em] text-burgundy-800">Accommodations</span>
-        <h2 class="font-serif text-3xl sm:text-4xl font-bold text-stone-900 mt-1">Our Signature Suites</h2>
-      </div>
-      <p class="text-stone-600 text-sm max-w-md">
-        All reservations include complimentary high-speed Wi-Fi, 24-hour power supply, and secured on-site parking.
-      </p>
-    </div>
-
-    <div id="roomsGrid" class="grid grid-cols-1 md:grid-cols-3 gap-8">
-      <!-- Populated via JS below -->
-    </div>
-  </section>
-
-  <!-- Amenities Section -->
-  <section id="amenities" class="py-16 bg-burgundy-950 text-white">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6">
-      <div class="text-center max-w-xl mx-auto mb-12">
-        <span class="text-xs font-bold uppercase tracking-[0.2em] text-gold-400">Hospitality Standards</span>
-        <h2 class="font-serif text-3xl sm:text-4xl font-bold mt-1">Designed for Effortless Stays</h2>
-      </div>
-
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-        <div class="p-5 rounded-2xl bg-white/5 border border-white/10">
-          <div class="text-gold-400 text-xl mb-2">⚡</div>
-          <h3 class="font-semibold text-base mb-1">24/7 Power & AC</h3>
-          <p class="text-xs text-stone-400 leading-relaxed">Uninterrupted power backup and whisper-quiet split cooling in every suite.</p>
-        </div>
-        <div class="p-5 rounded-2xl bg-white/5 border border-white/10">
-          <div class="text-gold-400 text-xl mb-2">📶</div>
-          <h3 class="font-semibold text-base mb-1">High-Speed Wi-Fi</h3>
-          <p class="text-xs text-stone-400 leading-relaxed">Dedicated fiber internet ready for remote work, streaming, and video calls.</p>
-        </div>
-        <div class="p-5 rounded-2xl bg-white/5 border border-white/10">
-          <div class="text-gold-400 text-xl mb-2">🛡️</div>
-          <h3 class="font-semibold text-base mb-1">24-Hour Security</h3>
-          <p class="text-xs text-stone-400 leading-relaxed">Gated compound, CCTV surveillance, and uniformed security personnel.</p>
-        </div>
-        <div class="p-5 rounded-2xl bg-white/5 border border-white/10">
-          <div class="text-gold-400 text-xl mb-2">🍽️</div>
-          <h3 class="font-semibold text-base mb-1">Room Service</h3>
-          <p class="text-xs text-stone-400 leading-relaxed">Freshly prepared local & continental dishes delivered directly to your door.</p>
+          <div class="reveal p-8 lg:p-10 border-r border-b border-white/10 hover:bg-white/[0.03] transition">
+            <svg class="text-gold-400 mb-6" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg>
+            <h3 class="font-serif text-2xl mb-2">24-Hour Security</h3>
+            <p class="text-sm text-ivory-200/65 leading-relaxed">Gated compound, CCTV surveillance and uniformed security personnel on duty.</p>
+          </div>
+          <div class="reveal p-8 lg:p-10 border-r border-b border-white/10 hover:bg-white/[0.03] transition">
+            <svg class="text-gold-400 mb-6" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M3 17h18M5 17a7 7 0 0 1 14 0M12 7V5M10 5h4M2 20h20"/></svg>
+            <h3 class="font-serif text-2xl mb-2">In-Room Dining</h3>
+            <p class="text-sm text-ivory-200/65 leading-relaxed">Freshly prepared local and continental dishes, delivered directly to your door.</p>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
+
+    <!-- Closing CTA -->
+    <section class="max-w-7xl mx-auto px-5 sm:px-8 py-24 lg:py-32 text-center reveal">
+      <p class="text-burgundy-800 text-[11px] uppercase eyebrow font-semibold mb-6">Reservations</p>
+      <h2 class="font-serif text-5xl sm:text-6xl font-medium leading-[1.05] max-w-3xl mx-auto">Your room is a message away.</h2>
+      <p class="mt-6 text-stone-600 max-w-xl mx-auto leading-relaxed">Send your dates and our reservations team will confirm availability and your rate directly on WhatsApp.</p>
+      <div class="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
+        <button onclick="openBookingModal()" class="bg-burgundy-900 hover:bg-burgundy-800 text-white font-semibold text-[13px] uppercase tracking-[0.16em] px-9 py-4 transition">Request a Reservation</button>
+        <a id="ctaWhatsApp" href="#" target="_blank" rel="noopener" class="inline-flex items-center justify-center gap-3 border border-burgundy-900/30 hover:border-burgundy-900 text-burgundy-900 text-[13px] uppercase tracking-[0.16em] px-9 py-4 transition">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.4.1-.2 0-.3 0-.5l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3Z"/></svg>
+          Chat on WhatsApp
+        </a>
+      </div>
+    </section>
+  </main>
 
   <!-- Footer -->
-  <footer id="location" class="bg-stone-950 text-stone-400 py-12 border-t border-white/10">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-6">
-      <div>
-        <span class="font-serif text-xl font-bold text-white">Wellington Mary Hotel</span>
-        <p class="text-xs text-stone-500 mt-1">Interactive Website Sample • Built for Direct Bookings</p>
+  <footer id="contact" class="bg-ink text-ivory-200/70 scroll-mt-16">
+    <div class="max-w-7xl mx-auto px-5 sm:px-8 py-16 grid sm:grid-cols-2 lg:grid-cols-12 gap-12">
+      <div class="lg:col-span-5">
+        <p class="font-serif text-3xl text-white">Wellington Mary</p>
+        <p class="text-[10px] uppercase eyebrow text-gold-400 mt-1.5">Hotel &amp; Suites</p>
+        <p class="mt-6 text-sm leading-relaxed max-w-sm">Refined rooms and suites with dependable power, fast Wi-Fi and genuine hospitality.</p>
       </div>
-      <div class="text-xs text-stone-500">
-        © 2026 Wellington Mary Hotel & Suites. Sample Layout.
+      <div class="lg:col-span-3">
+        <p class="text-[11px] uppercase eyebrow text-white font-semibold mb-5">Explore</p>
+        <ul class="space-y-3 text-sm">
+          <li><a href="#rooms" class="link-underline hover:text-gold-300">Rooms &amp; Suites</a></li>
+          <li><a href="#amenities" class="link-underline hover:text-gold-300">Amenities</a></li>
+          <li><button onclick="openBookingModal()" class="link-underline hover:text-gold-300">Book Direct</button></li>
+        </ul>
+      </div>
+      <div class="lg:col-span-4">
+        <p class="text-[11px] uppercase eyebrow text-white font-semibold mb-5">Reservations</p>
+        <ul class="space-y-3 text-sm">
+          <li><a id="footerPhone" href="#" class="link-underline hover:text-gold-300"></a></li>
+          <li><a id="footerWhatsApp" href="#" target="_blank" rel="noopener" class="link-underline hover:text-gold-300">Message us on WhatsApp</a></li>
+          <li class="text-ivory-200/50">Front desk available 24 hours</li>
+        </ul>
+      </div>
+    </div>
+    <div class="border-t border-white/10">
+      <div class="max-w-7xl mx-auto px-5 sm:px-8 py-6 flex flex-col sm:flex-row justify-between gap-2 text-xs text-ivory-200/45">
+        <p>&copy; <span id="year"></span> Wellington Mary Hotel &amp; Suites. All rights reserved.</p>
+        <p>Best rates when you book direct.</p>
       </div>
     </div>
   </footer>
 
-  <!-- Interactive Booking Modal -->
-  <div id="bookingModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/75 backdrop-blur-sm p-4">
-    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl relative">
-      <button onclick="closeBookingModal()" class="absolute top-4 right-4 text-stone-400 hover:text-stone-700 text-xl font-bold">✕</button>
-      
-      <span class="text-xs font-bold uppercase tracking-wider text-burgundy-800">Direct Reservation</span>
-      <h3 id="modalRoomName" class="font-serif text-2xl font-bold text-stone-900 mt-0.5">Executive Suite</h3>
-      <p class="text-xs font-medium text-stone-500 mb-5">Rate will be confirmed upon booking request</p>
-
-      <form onsubmit="submitReservation(event)" class="space-y-4">
-        <div>
-          <label class="block text-xs font-semibold text-stone-600 mb-1">Full Name</label>
-          <input type="text" id="guestName" required placeholder="e.g. Chinedu Okafor" class="w-full rounded-lg border border-stone-300 px-3 py-2 text-sm focus:outline-none focus:border-burgundy-800" />
-        </div>
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs font-semibold text-stone-600 mb-1">Check-In Date</label>
-            <input type="date" id="modalCheckIn" required class="w-full rounded-lg border border-stone-300 px-3 py-2 text-sm focus:outline-none focus:border-burgundy-800" />
-          </div>
-          <div>
-            <label class="block text-xs font-semibold text-stone-600 mb-1">Check-Out Date</label>
-            <input type="date" id="modalCheckOut" required class="w-full rounded-lg border border-stone-300 px-3 py-2 text-sm focus:outline-none focus:border-burgundy-800" />
-          </div>
-        </div>
-        <div>
-          <label class="block text-xs font-semibold text-stone-600 mb-1">Phone / WhatsApp Number</label>
-          <input type="tel" id="guestPhone" required placeholder="080..." class="w-full rounded-lg border border-stone-300 px-3 py-2 text-sm focus:outline-none focus:border-burgundy-800" />
-        </div>
-
-        <button type="submit" class="w-full bg-burgundy-900 hover:bg-burgundy-800 text-white font-semibold py-3 rounded-xl transition text-sm shadow-lg mt-2">
-          Confirm & Send to WhatsApp
+  <!-- Booking Modal -->
+  <div id="bookingModal" class="fixed inset-0 z-50 hidden items-end sm:items-center justify-center bg-burgundy-950/70 backdrop-blur-sm sm:p-4" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-panel bg-ivory-50 w-full sm:max-w-lg max-h-[95vh] overflow-y-auto shadow-2xl relative">
+      <div class="bg-burgundy-950 text-white px-8 pt-8 pb-7 relative grain">
+        <button onclick="closeBookingModal()" class="absolute top-5 right-5 w-9 h-9 flex items-center justify-center text-ivory-200/70 hover:text-white transition" aria-label="Close">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 6l12 12M18 6 6 18"/></svg>
         </button>
+        <p class="relative text-[10px] uppercase eyebrow text-gold-400 font-semibold">Direct Reservation</p>
+        <h3 id="modalTitle" class="relative font-serif text-3xl font-medium mt-2">Request your stay</h3>
+        <p class="relative text-sm text-ivory-200/70 mt-2">Our team confirms availability and your rate on WhatsApp.</p>
+      </div>
+
+      <form id="reservationForm" onsubmit="submitReservation(event)" class="px-8 py-8 space-y-6" novalidate>
+        <label class="block">
+          <span class="block text-[10px] uppercase eyebrow font-semibold text-burgundy-800">Room</span>
+          <select id="modalRoom" class="field"></select>
+        </label>
+        <div class="grid grid-cols-2 gap-6">
+          <label class="block">
+            <span class="block text-[10px] uppercase eyebrow font-semibold text-burgundy-800">Arrival</span>
+            <input type="date" id="modalCheckIn" required class="field" />
+          </label>
+          <label class="block">
+            <span class="block text-[10px] uppercase eyebrow font-semibold text-burgundy-800">Departure</span>
+            <input type="date" id="modalCheckOut" required class="field" />
+          </label>
+        </div>
+        <label class="block">
+          <span class="block text-[10px] uppercase eyebrow font-semibold text-burgundy-800">Guests</span>
+          <select id="modalGuests" class="field">
+            <option>1 Adult</option>
+            <option selected>2 Adults</option>
+            <option>2 Adults, 1 Child</option>
+            <option>2 Adults, 2 Children</option>
+          </select>
+        </label>
+        <label class="block">
+          <span class="block text-[10px] uppercase eyebrow font-semibold text-burgundy-800">Full name</span>
+          <input type="text" id="guestName" required autocomplete="name" placeholder="e.g. Adaeze Nwankwo" class="field placeholder:text-stone-400" />
+        </label>
+        <label class="block">
+          <span class="block text-[10px] uppercase eyebrow font-semibold text-burgundy-800">Phone / WhatsApp</span>
+          <input type="tel" id="guestPhone" required autocomplete="tel" placeholder="+234 ..." class="field placeholder:text-stone-400" />
+        </label>
+
+        <p id="formError" class="text-sm text-red-700 hidden" role="alert"></p>
+
+        <button type="submit" class="w-full bg-burgundy-900 hover:bg-burgundy-800 text-white font-semibold text-[13px] uppercase tracking-[0.16em] py-4 transition inline-flex items-center justify-center gap-3">
+          Send Request via WhatsApp
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+        <p class="text-xs text-stone-500 text-center">No payment is taken now. Your booking is confirmed once our team replies.</p>
       </form>
     </div>
   </div>
 
   <script>
     const HOTEL_WHATSAPP = "2347038298158";
+    const HOTEL_PHONE_DISPLAY = "+234 703 829 8158";
 
+    // To show real photography, add an `image` URL to any room (e.g. image: "/images/executive.jpg").
     const ROOMS = [
       {
         name: "Standard Room",
-        badge: "Category 01",
-        placeholderLabel: "Standard Room Photo",
-        features: ["Queen Bed", "Smart TV", "24/7 Power & AC", "En-suite Bath"]
+        number: "01",
+        tagline: "Everything you need, beautifully done.",
+        description: "A restful, well-appointed room for business trips and short stays, with a plush queen bed and a calm, considered finish.",
+        features: ["Queen bed", "Smart TV", "24/7 power & air conditioning", "En-suite bathroom"],
+        image: ""
       },
       {
         name: "Executive Suite",
-        badge: "Category 02",
-        placeholderLabel: "Executive Suite Photo",
-        features: ["King Bed", "Lounge Seating", "Work Desk", "Complimentary Breakfast"]
+        number: "02",
+        tagline: "Room to work, room to unwind.",
+        description: "A generous suite with a king bed, separate lounge seating and a proper desk — breakfast is included every morning.",
+        features: ["King bed", "Lounge seating", "Dedicated work desk", "Complimentary breakfast"],
+        image: ""
       },
       {
         name: "Royal VIP Suite",
-        badge: "Category 03",
-        placeholderLabel: "Royal VIP Suite Photo",
-        features: ["Master Bedroom", "Private Living Area", "Mini Bar", "Priority Room Service"]
+        number: "03",
+        tagline: "Our finest, for occasions that matter.",
+        description: "A private residence-style suite with a master bedroom, separate living area, stocked mini bar and priority in-room dining.",
+        features: ["Master bedroom", "Private living area", "Stocked mini bar", "Priority room service"],
+        image: ""
       }
     ];
 
-    // Render Suite Cards with Empty Styled Image & Price Placeholders
-    const roomsGrid = document.getElementById('roomsGrid');
-    roomsGrid.innerHTML = ROOMS.map(room => `
-      <div class="bg-white rounded-2xl overflow-hidden border border-stone-200 shadow-sm hover:shadow-xl transition flex flex-col">
-        <div class="relative h-56 bg-gradient-to-br from-burgundy-950 via-burgundy-900 to-burgundy-800 flex flex-col items-center justify-center p-6 text-center border-b border-stone-200">
-          <div class="w-11 h-11 rounded-full bg-white/10 border border-dashed border-gold-400/50 flex items-center justify-center text-gold-400 text-lg mb-2.5">
-            📷
-          </div>
-          <p class="text-xs font-semibold uppercase tracking-wider text-gold-400">${room.placeholderLabel}</p>
-          <p class="text-[11px] text-stone-300/80 mt-1">Room image placeholder</p>
-          <span class="absolute top-3 left-3 bg-black/40 backdrop-blur-sm text-gold-400 text-[11px] font-semibold px-3 py-1 rounded-full border border-gold-500/20">
-            ${room.badge}
-          </span>
-        </div>
-        <div class="p-6 flex-1 flex flex-col">
-          <div class="flex items-baseline justify-between gap-2 mb-2">
-            <h3 class="font-serif text-2xl font-bold text-stone-900">${room.name}</h3>
-          </div>
-          <p class="text-stone-400 font-semibold text-sm mb-4 tracking-wide">
-            ₦ — <span class="text-xs font-normal text-stone-400">/ night (Rate placeholder)</span>
-          </p>
-          <ul class="space-y-1.5 text-xs text-stone-600 mb-6 flex-1">
-            ${room.features.map(f => `<li class="flex items-center gap-2"><span class="text-gold-600">✓</span> ${f}</li>`).join('')}
-          </ul>
-          <button onclick="openBookingModal('${room.name}')" class="w-full bg-burgundy-900 hover:bg-burgundy-800 text-white font-semibold py-2.5 rounded-xl transition text-sm">
-            Book This Suite
-          </button>
-        </div>
-      </div>
-    `).join('');
+    const roomArt = (i) => {
+      const motifs = [
+        // bed
+        `<path d="M60 230v-60h200v60M60 200h200M80 170v-30h70v30M170 170v-30h70v30M60 230v20M260 230v20" />`,
+        // armchair + desk lamp
+        `<path d="M70 250v-70a20 20 0 0 1 20-20h60a20 20 0 0 1 20 20v70M60 200h120v30H60zM210 250v-90M190 160h40l-10-40h-20z" />`,
+        // chandelier
+        `<path d="M160 60v50M110 110h100M110 110c0 30 20 45 50 45s50-15 50-45M120 155v15M160 160v20M200 155v15" /><circle cx="120" cy="175" r="5"/><circle cx="160" cy="185" r="5"/><circle cx="200" cy="175" r="5"/>`
+      ];
+      return `
+        <svg class="absolute inset-0 w-full h-full" viewBox="0 0 320 320" preserveAspectRatio="xMidYMid slice" fill="none" aria-hidden="true">
+          <circle cx="${[230, 90, 160][i]}" cy="${[90, 100, 60][i]}" r="70" fill="#D4B475" fill-opacity=".08"/>
+          <g stroke="#D4B475" stroke-opacity=".6" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round">${motifs[i % motifs.length]}</g>
+          <path d="M0 270h320" stroke="#D4B475" stroke-opacity=".25"/>
+        </svg>`;
+    };
 
-    // Modal Controls
+    const check = `<svg class="text-gold-600 shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="m5 12 4.5 4.5L19 7"/></svg>`;
+
+    document.getElementById('roomsList').innerHTML = ROOMS.map((room, i) => {
+      const flip = i % 2 === 1;
+      const visual = room.image
+        ? `<img src="${room.image}" alt="${room.name} at Wellington Mary Hotel" class="absolute inset-0 w-full h-full object-cover" loading="lazy" />`
+        : `<div class="absolute inset-0 bg-gradient-to-br from-burgundy-800 via-burgundy-900 to-burgundy-950"></div>${roomArt(i)}`;
+      return `
+      <article class="reveal grid lg:grid-cols-12 gap-10 lg:gap-16 items-center">
+        <div class="lg:col-span-7 ${flip ? 'lg:order-2' : ''}">
+          <div class="relative aspect-[4/3] overflow-hidden group">
+            ${visual}
+            <div class="absolute inset-0 ring-1 ring-inset ring-gold-500/20"></div>
+            <span class="absolute bottom-6 ${flip ? 'right-6' : 'left-6'} font-serif text-[120px] leading-none text-white/10 select-none">${room.number}</span>
+          </div>
+        </div>
+        <div class="lg:col-span-5 ${flip ? 'lg:order-1' : ''}">
+          <p class="text-burgundy-800 text-[11px] uppercase eyebrow font-semibold mb-4">${room.number} &mdash; ${room.tagline}</p>
+          <h3 class="font-serif text-4xl sm:text-5xl font-medium leading-none mb-6">${room.name}</h3>
+          <p class="text-stone-600 leading-relaxed mb-8">${room.description}</p>
+          <ul class="grid grid-cols-2 gap-x-6 gap-y-3 text-sm text-ink/80 mb-10 border-t border-ivory-200 pt-6">
+            ${room.features.map(f => `<li class="flex items-start gap-2.5">${check}<span>${f}</span></li>`).join('')}
+          </ul>
+          <div class="flex flex-wrap items-center gap-6">
+            <button onclick="openBookingModal('${room.name}')" class="bg-burgundy-900 hover:bg-burgundy-800 text-white font-semibold text-[13px] uppercase tracking-[0.16em] px-8 py-4 transition">
+              Reserve This Room
+            </button>
+            <span class="text-sm text-stone-500"><span class="font-serif italic text-lg text-ink">Rates on request</span> &middot; per night</span>
+          </div>
+        </div>
+      </article>`;
+    }).join('');
+
+    // Contact links
+    const waLink = (text) => `https://wa.me/${HOTEL_WHATSAPP}${text ? `?text=${encodeURIComponent(text)}` : ''}`;
+    document.getElementById('ctaWhatsApp').href = waLink("Hello Wellington Mary Hotel, I'd like to ask about a reservation.");
+    document.getElementById('footerWhatsApp').href = waLink();
+    const footerPhone = document.getElementById('footerPhone');
+    footerPhone.textContent = HOTEL_PHONE_DISPLAY;
+    footerPhone.href = `tel:+${HOTEL_WHATSAPP}`;
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Date helpers
+    const toISO = (d) => new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+    const today = toISO(new Date());
+    ['quickCheckIn', 'quickCheckOut', 'modalCheckIn', 'modalCheckOut'].forEach(id => document.getElementById(id).min = today);
+    const syncMin = (inId, outId) => {
+      document.getElementById(inId).addEventListener('change', (e) => {
+        const out = document.getElementById(outId);
+        out.min = e.target.value || today;
+        if (out.value && out.value <= e.target.value) out.value = '';
+      });
+    };
+    syncMin('quickCheckIn', 'quickCheckOut');
+    syncMin('modalCheckIn', 'modalCheckOut');
+
+    // Header & mobile menu
+    const header = document.getElementById('siteHeader');
+    const onScroll = () => header.classList.toggle('scrolled', window.scrollY > 40);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+    const menuToggle = document.getElementById('menuToggle');
+    const mobileMenu = document.getElementById('mobileMenu');
+    menuToggle.addEventListener('click', () => {
+      const open = mobileMenu.classList.toggle('hidden') === false;
+      menuToggle.setAttribute('aria-expanded', String(open));
+    });
+    mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+      mobileMenu.classList.add('hidden');
+      menuToggle.setAttribute('aria-expanded', 'false');
+    }));
+
+    // Scroll reveal
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('is-visible'); io.unobserve(entry.target); } });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+    // Booking modal
     const modal = document.getElementById('bookingModal');
-    let selectedRoom = '';
+    const modalRoom = document.getElementById('modalRoom');
+    modalRoom.innerHTML = `<option value="Any available room">Any available room</option>` +
+      ROOMS.map(r => `<option value="${r.name}">${r.name}</option>`).join('');
 
     function openBookingModal(roomName) {
-      selectedRoom = roomName;
-      document.getElementById('modalRoomName').textContent = roomName;
-      modal.classList.remove('hidden');
-      modal.classList.add('flex');
+      modalRoom.value = roomName || 'Any available room';
+      document.getElementById('formError').classList.add('hidden');
+      modal.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      setTimeout(() => (document.getElementById('modalCheckIn').value ? document.getElementById('guestName') : document.getElementById('modalCheckIn')).focus(), 50);
     }
 
     function closeBookingModal() {
-      modal.classList.add('hidden');
-      modal.classList.remove('flex');
+      modal.classList.remove('open');
+      document.body.style.overflow = '';
     }
+
+    modal.addEventListener('click', (e) => { if (e.target === modal) closeBookingModal(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modal.classList.contains('open')) closeBookingModal(); });
 
     function handleQuickSearch(e) {
       e.preventDefault();
-      document.getElementById('modalCheckIn').value = document.getElementById('quickCheckIn').value;
-      document.getElementById('modalCheckOut').value = document.getElementById('quickCheckOut').value;
-      openBookingModal('Available Suite Reservation');
+      const checkIn = document.getElementById('quickCheckIn').value;
+      const checkOut = document.getElementById('quickCheckOut').value;
+      const err = document.getElementById('quickError');
+      if (checkOut <= checkIn) {
+        err.textContent = 'Please choose a departure date after your arrival date.';
+        err.classList.remove('hidden');
+        return;
+      }
+      err.classList.add('hidden');
+      document.getElementById('modalCheckIn').value = checkIn;
+      document.getElementById('modalCheckOut').value = checkOut;
+      document.getElementById('modalCheckOut').min = checkIn;
+      document.getElementById('modalGuests').value = document.getElementById('quickGuests').value;
+      openBookingModal();
     }
 
     function submitReservation(e) {
       e.preventDefault();
-      const name = document.getElementById('guestName').value;
-      const checkIn = document.getElementById('modalCheckIn').value;
-      const checkOut = document.getElementById('modalCheckOut').value;
-      const phone = document.getElementById('guestPhone').value;
+      const fields = ['modalCheckIn', 'modalCheckOut', 'guestName', 'guestPhone'].map(id => document.getElementById(id));
+      fields.forEach(f => f.classList.toggle('invalid', !f.value.trim()));
+      const err = document.getElementById('formError');
+      const [inEl, outEl, nameEl, phoneEl] = fields;
 
-      const text = `Hello Wellington Mary Hotel! I'd like to make a direct reservation:\n\n• Suite: ${selectedRoom}\n• Guest: ${name}\n• Check-In: ${checkIn}\n• Check-Out: ${checkOut}\n• Phone: ${phone}`;
-      window.open(`https://wa.me/${HOTEL_WHATSAPP}?text=${encodeURIComponent(text)}`, '_blank');
+      let message = '';
+      if (fields.some(f => !f.value.trim())) message = 'Please complete all fields so we can confirm your stay.';
+      else if (outEl.value <= inEl.value) { message = 'Your departure date must be after your arrival date.'; outEl.classList.add('invalid'); }
+      else if (phoneEl.value.replace(/\D/g, '').length < 7) { message = 'Please enter a valid phone or WhatsApp number.'; phoneEl.classList.add('invalid'); }
+
+      if (message) { err.textContent = message; err.classList.remove('hidden'); return; }
+      err.classList.add('hidden');
+
+      const text = `Hello Wellington Mary Hotel! I'd like to make a direct reservation:\n\n• Room: ${modalRoom.value}\n• Guest: ${nameEl.value.trim()}\n• Guests: ${document.getElementById('modalGuests').value}\n• Arrival: ${inEl.value}\n• Departure: ${outEl.value}\n• Phone: ${phoneEl.value.trim()}`;
+      window.open(waLink(text), '_blank', 'noopener');
       closeBookingModal();
     }
   </script>
